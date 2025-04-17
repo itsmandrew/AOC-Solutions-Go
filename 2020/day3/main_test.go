@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"testing"
 )
@@ -13,7 +12,7 @@ func TestBasics(t *testing.T) {
 
 		file, err := os.Open(fname)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
+			t.Fatalf("Test failed with error: %v", err)
 		}
 
 		matrix := createMatrix(file)
@@ -31,7 +30,7 @@ func TestBasics(t *testing.T) {
 
 		file, err := os.Open(fname)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
+			t.Fatalf("Test failed with error: %v", err)
 		}
 
 		matrix := createMatrix(file)
