@@ -24,8 +24,24 @@ func main() {
 
 	matrix := createMatrix(file)
 
-	trees := countTreesInMatrix(matrix)
-	fmt.Printf("Trees in map: %d\n", trees)
+	slopes := [][]int{
+		{1, 1},
+		{3, 1},
+		{5, 1},
+		{7, 1},
+		{1, 2},
+	}
+
+	trees := []int{}
+
+	for _, arr := range slopes {
+		trees = append(trees, countTreesInMatrix(matrix, arr[0], arr[1]))
+	}
+
+	fmt.Printf("%v trees\n", trees)
+
+	res := getProductOfSlice(trees)
+	fmt.Printf("Product of trees given slope: %d\n", res)
 
 }
 
@@ -43,22 +59,34 @@ func createMatrix(file *os.File) [][]string {
 	return matrix
 }
 
-func countTreesInMatrix(matrix [][]string) int {
+func countTreesInMatrix(matrix [][]string, x_slope, y_slope int) int {
 	// Given matrix, counts how many trees
-	trees := 0
+	rows := len(matrix)
+	if rows == 0 {
+		return 0
+	}
 
-	ROWS, COLS := len(matrix), len(matrix[0])
-	rc, cc := 0, 0
+	cols := len(matrix[0])
 
-	for i := 0; i < ROWS-1; i++ {
-		rc, cc = rc+1, cc+3
-		if matrix[rc%ROWS][cc%COLS] == "#" {
-			trees += 1
+	trees, col := 0, 0
+
+	for row := y_slope; row < rows; row += y_slope {
+		col = (col + x_slope) % cols
+
+		if matrix[row][col] == "#" {
+			trees++
 		}
 	}
 	return trees
 }
 
-func countTreesInMatrix_v2(matrix [][]string) int {
-	return 0
+func getProductOfSlice(arr []int) int64 {
+
+	res := int64(1)
+
+	for _, val := range arr {
+		res = res * int64(val)
+	}
+
+	return res
 }

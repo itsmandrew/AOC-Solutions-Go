@@ -18,7 +18,7 @@ func TestBasics(t *testing.T) {
 
 		matrix := createMatrix(file)
 
-		got := countTreesInMatrix(matrix)
+		got := countTreesInMatrix(matrix, 3, 1)
 		want := 7
 
 		if got != want {
@@ -36,8 +36,21 @@ func TestBasics(t *testing.T) {
 
 		matrix := createMatrix(file)
 
-		got := countTreesInMatrix_v2(matrix)
-		want := 336
+		slopes := [][]int{
+			{1, 1},
+			{3, 1},
+			{5, 1},
+			{7, 1},
+			{1, 2},
+		}
+
+		trees := []int{}
+		for _, arr := range slopes {
+			trees = append(trees, countTreesInMatrix(matrix, arr[0], arr[1]))
+		}
+
+		got := getProductOfSlice(trees)
+		want := int64(336)
 
 		if got != want {
 			t.Errorf("got %d want %d", got, want)
