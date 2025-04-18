@@ -1,8 +1,8 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 )
@@ -23,56 +23,54 @@ func main() {
 
 	defer file.Close()
 
-	scanner := bufio.NewScanner(file)
+	data, err := io.ReadAll(file)
 
-	required := []string{
-		"byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid",
+	if err != nil {
+		fmt.Printf("%v\n", err)
 	}
 
-	validCnt := 0
+	required := []string{"byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"}
+	hashMap := parsePassports(string(data))
 
-	m := map[string]string{}
+	fmt.Printf("%v\n", checkValid(hashMap, required))
+}
 
-	for scanner.Scan() {
+func parsePassports(input string) []map[string]string {
 
-		line := scanner.Text()
+	res := []map[string]string{}
 
-		if len(strings.TrimSpace(line)) > 0 {
-			createMap(line, m)
-		} else {
-			fmt.Printf("the map: %v\n", m)
+	blocks := strings.Split(input, "\n\n")
 
-			if checkAllKeys(required, m) {
-				validCnt++
+	for _, block := range blocks {
+
+		newBlock := strings.Fields(block)
+		m := map[string]string{}
+
+		for _, kv := range newBlock {
+			keyPair := strings.Split(kv, ":")
+			m[keyPair[0]] = keyPair[1]
+		}
+		res = append(res, m)
+	}
+	return res
+}
+
+func checkValid(hashMap []map[string]string, reqs []string) int {
+	validPassports := 0
+
+	for _, entry := range hashMap {
+		okFlag := true
+		fmt.Printf("%v\n", entry)
+		for _, key := range reqs {
+			if _, ok := entry[key]; !ok {
+				okFlag = false
+				break
 			}
-			m = map[string]string{}
+		}
+		if okFlag {
+			validPassports++
 		}
 	}
 
-	// fmt.Printf("the map: %v\n", m)
-
-	if checkAllKeys(required, m) {
-		validCnt++
-	}
-
-	fmt.Printf("valid passports: %d\n", validCnt)
-
-}
-func createMap(line string, m map[string]string) {
-	arr := strings.Split(line, " ")
-
-	for _, pair := range arr {
-		two_pair := strings.Split(pair, ":")
-		m[two_pair[0]] = two_pair[1]
-	}
-}
-
-func checkAllKeys(req []string, m map[string]string) bool {
-
-	for _, key := range req {
-		if _, ok := m[key]; !ok {
-			return false
-		}
-	}
-	return true
+	return validPassports
 }
