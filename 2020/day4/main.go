@@ -25,27 +25,54 @@ func main() {
 
 	scanner := bufio.NewScanner(file)
 
-	// Custom scanner for our use case, splits by empty NEW LINE
-	scanner.Split(func(data []byte, atEOF bool) (advance int, token []byte, err error) {
-		// Check if we are at the end of the file
-		if atEOF && len(data) == 0 {
-			return 0, nil, nil
-		}
+	required := []string{
+		"byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid",
+	}
 
-		// Trim spaces and check if the current line is empty or just whitespace
-		line := string(data)
-		if strings.TrimSpace(line) == "" {
-			return len(data), nil, nil // Found an empty line, treat as delimiter
-		}
+	validCnt := 0
 
-		// Otherwise, return the whole line as a token
-		return len(data), data, nil
-	})
+	m := map[string]string{}
 
 	for scanner.Scan() {
+
 		line := scanner.Text()
+
 		if len(strings.TrimSpace(line)) > 0 {
-			fmt.Println("Found non-empty line:", line)
+			createMap(line, m)
+		} else {
+			fmt.Printf("the map: %v\n", m)
+
+			if checkAllKeys(required, m) {
+				validCnt++
+			}
+			m = map[string]string{}
 		}
 	}
+
+	// fmt.Printf("the map: %v\n", m)
+
+	if checkAllKeys(required, m) {
+		validCnt++
+	}
+
+	fmt.Printf("valid passports: %d\n", validCnt)
+
+}
+func createMap(line string, m map[string]string) {
+	arr := strings.Split(line, " ")
+
+	for _, pair := range arr {
+		two_pair := strings.Split(pair, ":")
+		m[two_pair[0]] = two_pair[1]
+	}
+}
+
+func checkAllKeys(req []string, m map[string]string) bool {
+
+	for _, key := range req {
+		if _, ok := m[key]; !ok {
+			return false
+		}
+	}
+	return true
 }
