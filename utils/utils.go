@@ -9,7 +9,7 @@ import (
 func CheckOSArguments() bool {
 
 	if len(os.Args[1:]) == 0 || len(os.Args[1:]) > 1 {
-		fmt.Printf("Got too many arguments, expected 1 got %d\n", len(os.Args[1:]))
+		fmt.Printf("Wrong number of arguments, expected 1 got %d\n", len(os.Args[1:]))
 		return false
 	}
 	return true
