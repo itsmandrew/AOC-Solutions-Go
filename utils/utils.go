@@ -24,6 +24,8 @@ func ReadLines(path string) ([]string, error) {
 		return nil, err
 	}
 
+	defer file.Close()
+
 	scanner := bufio.NewScanner(file)
 	lines := []string{}
 
