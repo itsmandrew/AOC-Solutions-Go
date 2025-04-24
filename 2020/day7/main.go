@@ -3,10 +3,16 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/itsmandrew/aoc-go/utils"
 )
+
+type BagRule struct {
+	Name  string
+	Count int
+}
 
 func main() {
 
@@ -25,8 +31,7 @@ func main() {
 
 	graph := createMapping(cleanData)
 
-	result := countValidBags(graph)
-	fmt.Printf("valid bags: %d\n", result)
+	fmt.Println(countBagsInside("shiny gold", graph))
 
 }
 
@@ -53,28 +58,44 @@ func splitCleanAndData(data []string) [][]string {
 	return splitLines
 }
 
-func extractColors(line string) []string {
+func countBagsInside(bag string, rules map[string][]BagRule) int {
+	total := 0
+
+	for _, rule := range rules[bag] {
+		total += rule.Count * (1 + countBagsInside(rule.Name, rules))
+	}
+
+	return total
+}
+
+func extractColors(line string) []BagRule {
 	words := strings.Fields(line)
-	colors := []string{}
+	rules := []BagRule{}
 
 	for i := 0; i < len(words); {
 		if words[i] == "no" {
 			break
 		}
 		if i+2 < len(words) {
+			count, err := strconv.Atoi(words[i])
+			if err != nil {
+				i++
+				continue
+			}
 			color := words[i+1] + " " + words[i+2]
-			colors = append(colors, color)
+			rules = append(rules, BagRule{Name: color, Count: count})
 			i += 3
+
 		} else {
 			break
 		}
 	}
-	return colors
+	return rules
 }
 
-func createMapping(data [][]string) map[string][]string {
+func createMapping(data [][]string) map[string][]BagRule {
 
-	hashMap := make(map[string][]string)
+	hashMap := make(map[string][]BagRule)
 
 	for _, arr := range data {
 		key := strings.TrimSpace(arr[0])
