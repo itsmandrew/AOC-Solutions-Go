@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/itsmandrew/aoc-go/utils"
@@ -19,19 +20,31 @@ func main() {
 
 	intArr, err := utils.StrArrayToInt(arr)
 
+	if err != nil {
+		fmt.Printf("%v", err)
+		os.Exit(1)
+	}
+
 	hashMap := make(map[int]int) // Value : index
 
-	for i := 0; i < 5; i++ {
+	for i := 0; i < 25; i++ {
 		hashMap[intArr[i]] = i
 	}
 
 	initialIndex := 0
+	lastVal := 0
 
-	for i := 5; i < len(arr); i++ {
-		checkValid(hashMap, intArr[i])
+	for i := 25; i < len(arr); i++ {
+		if !checkValid(hashMap, intArr[i]) {
+			lastVal = intArr[i]
+			break
+		}
 		delete(hashMap, intArr[initialIndex])
+		initialIndex++
 		hashMap[intArr[i]] = i
 	}
+
+	fmt.Printf("%v\n", lastVal)
 
 }
 
