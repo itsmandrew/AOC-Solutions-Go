@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 )
 
 func CheckOSArguments() bool {
@@ -34,4 +35,22 @@ func ReadLines(path string) ([]string, error) {
 	}
 
 	return lines, scanner.Err()
+}
+
+func StrArrayToInt(arr []string) ([]int, error) {
+
+	res := make([]int, len(arr))
+
+	for i := range arr {
+		val, err := strconv.Atoi(string(arr[i]))
+
+		if err != nil {
+			var zeroVal []int
+			return zeroVal, fmt.Errorf("conversion error: %s", err)
+		}
+
+		res[i] = val
+	}
+
+	return res, nil
 }
