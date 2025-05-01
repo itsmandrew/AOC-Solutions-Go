@@ -25,26 +25,33 @@ func main() {
 		os.Exit(1)
 	}
 
-	hashMap := make(map[int]int) // Value : index
+	result := slidingWindow(intArr, 25)
+	fmt.Printf("last value: %d\n", result)
 
-	for i := 0; i < 25; i++ {
-		hashMap[intArr[i]] = i
+}
+
+func slidingWindow(arr []int, windowSize int) int {
+
+	window := make(map[int]int)
+
+	for i := 0; i < windowSize; i++ {
+		window[arr[i]] = i
 	}
 
 	initialIndex := 0
-	lastVal := 0
+	result := 0
 
-	for i := 25; i < len(arr); i++ {
-		if !checkValid(hashMap, intArr[i]) {
-			lastVal = intArr[i]
+	for i := windowSize; i < len(arr); i++ {
+		if !checkValid(window, arr[i]) {
+			result = arr[i]
 			break
 		}
-		delete(hashMap, intArr[initialIndex])
+		delete(window, arr[initialIndex])
 		initialIndex++
-		hashMap[intArr[i]] = i
+		window[arr[i]] = i
 	}
 
-	fmt.Printf("%v\n", lastVal)
+	return result
 
 }
 
