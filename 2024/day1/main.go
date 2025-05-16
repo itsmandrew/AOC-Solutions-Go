@@ -1,35 +1,28 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"math"
 	"os"
 	"slices"
 	"strconv"
 	"strings"
+
+	"github.com/itsmandrew/aoc-go/utils"
 )
 
 func main() {
 
-	if len(os.Args[1:]) != 1 {
-		fmt.Printf("Expected 1 arg, got %d\n", len(os.Args[1:]))
+	ok := utils.CheckOSArguments()
+
+	if !ok {
 		return
 	}
 
-	file, err := os.Open(os.Args[1])
+	lines, err := utils.ReadLines(os.Args[1])
+
 	if err != nil {
 		return
-	}
-
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-
-	var lines []string
-
-	for scanner.Scan() {
-		lines = append(lines, strings.TrimSpace(scanner.Text()))
 	}
 
 	var cleanArr [][]string
