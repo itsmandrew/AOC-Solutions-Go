@@ -42,6 +42,10 @@ func main() {
 
 }
 
+// Notes: "L" -> Empty
+// "#" -> Occupied
+// "." -> Floor
+
 func markOccupied(matrix *[][]rune, r, c int) bool {
 
 	directions := [][]int{
@@ -49,6 +53,10 @@ func markOccupied(matrix *[][]rune, r, c int) bool {
 		{0, 1},
 		{-1, 0},
 		{0, -1},
+		{1, 1},
+		{-1, -1},
+		{-1, 1},
+		{1, -1},
 	}
 
 	for _, d := range directions {
