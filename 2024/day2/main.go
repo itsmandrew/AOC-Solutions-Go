@@ -11,7 +11,6 @@ import (
 )
 
 func main() {
-
 	if ok := utils.CheckOSArguments(); !ok {
 		return
 	}
@@ -22,7 +21,6 @@ func main() {
 	}
 
 	intArr, err := linesToIntArrays(lines)
-
 	if err != nil {
 		return
 	}
@@ -30,11 +28,9 @@ func main() {
 	totalSafes := checkValidSafes(intArr)
 
 	fmt.Printf("Total safes: %d\n", totalSafes)
-
 }
 
 func linesToIntArrays(lines []string) ([][]int, error) {
-
 	var res [][]int
 
 	for i := range lines {
@@ -44,7 +40,6 @@ func linesToIntArrays(lines []string) ([][]int, error) {
 
 		for _, num := range splitLines {
 			val, err := strconv.Atoi(num)
-
 			if err != nil {
 				return [][]int{}, err
 			}
@@ -59,7 +54,6 @@ func linesToIntArrays(lines []string) ([][]int, error) {
 }
 
 func checkValidSafes(arr [][]int) int {
-
 	var totalSafes int
 
 	for _, list := range arr {
@@ -74,11 +68,9 @@ func checkValidSafes(arr [][]int) int {
 	}
 
 	return totalSafes
-
 }
 
 func checkValidList(arr []int) bool {
-
 	for rightPtr := 1; rightPtr < len(arr); rightPtr++ {
 		diff := int(math.Abs(float64(arr[rightPtr] - arr[rightPtr-1])))
 
