@@ -82,6 +82,10 @@ func IsHorizontal(pairOne []int, pairTwo []int) bool {
 	return pairOne[1] == pairTwo[1]
 }
 
+func IsDiagonal(pairOne []int, pairTwo []int) bool {
+	return AbsInt(pairOne[0]-pairTwo[0]) == AbsInt(pairOne[1]-pairTwo[1])
+}
+
 func AbsInt(x int) int {
 	if x < 0 {
 		return -x
@@ -106,6 +110,27 @@ func MarkGraph(graph [][]int, coords [][][]int) {
 
 			for i := 0; i < distance; i++ {
 				graph[pairs[0][1]][start+i] += 1
+			}
+
+		} else if IsDiagonal(pairs[0], pairs[1]) {
+			xStep := 1
+			yStep := 1
+
+			if pairs[0][0] > pairs[1][0] {
+				xStep = -1
+			}
+
+			if pairs[0][1] > pairs[1][1] {
+				yStep = -1
+			}
+
+			x, y := pairs[0][0], pairs[0][1]
+			distance := AbsInt(pairs[0][0]-pairs[1][0]) + 1
+
+			for i := 0; i < distance; i++ {
+				graph[y][x] += 1
+				x += xStep
+				y += yStep
 			}
 
 		} else {
